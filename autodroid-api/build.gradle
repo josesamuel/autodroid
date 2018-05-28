@@ -1,0 +1,25 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+apply plugin: 'org.jetbrains.dokka-android'
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.josesamuel:pager:1.0.4'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation deps.support.annotations
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+}
+
+dokka {
+    outputFormat = 'javadoc'
+    outputDirectory = "javadoc"
+    skipEmptyPackages = true
+    includeNonPublic = false
+}
+
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

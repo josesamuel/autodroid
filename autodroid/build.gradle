@@ -1,0 +1,16 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+dependencies {
+  implementation project(':autodroid-api')
+  implementation deps.auto.common
+  implementation deps.kpoet
+  compileOnly deps.auto.service
+}
+
+
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

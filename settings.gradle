@@ -1,0 +1,4 @@
+include  ':autodroid-api', ':autodroid', 'sampleapp'
+
+
+rootProject.name = 'AutoDroid-parent'
