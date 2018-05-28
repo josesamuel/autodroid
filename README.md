@@ -117,10 +117,9 @@ class MyAdapter(private val myDataset: MutableList<MyData>) : RecyclerView.Adapt
 ```
 <br/><br/>
 
+---
 
-With **AutoDroid**, all you have to do is
-***
-
+With **AutoDroid**, all you have to do is : 
 
 
 ```kotlin
@@ -128,6 +127,8 @@ With **AutoDroid**, all you have to do is
 recyclerView.adapter = MyDataAdapter(Pager(listDataProvider))
 
 ```
+
+---
 
 * No need to write Adapter, AutoDroid creates it for you 
 * No need to write ViewHolder, AutoDroid internally takes care of it
