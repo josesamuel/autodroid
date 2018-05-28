@@ -4,7 +4,7 @@ AutoDroid automates some common Android development tasks
 
 ## 1. RecyclerView
 
-RecylerView is awesome, but it require you to do several mundane stuff just to make it work -- such as 
+RecylerView is awesome, but it require you to create several boilerplate code just to make it work -- such as 
 
 1. Create an Adapter class
 2. Create a ViewHolder class
@@ -114,18 +114,18 @@ class MyAdapter(private val myDataset: MutableList<MyData>) : RecyclerView.Adapt
     }
 }
     
-
 ```
+<br/><br/>
 
 
 With **AutoDroid**, all you have to do is
+***
+
+
 
 ```kotlin
-        findViewById<RecyclerView>(R.id.recyclerView).apply {
-            layoutManager = LinearLayoutManager(this@ActivityUsingAutoDroidRecyclerView)
-            //Auto generated Adapter class from "MyData"
-            adapter = MyDataAdapter(Pager(listDataProvider))
-        }
+//Set the adapter to the AutoDroid auto generated class
+recyclerView.adapter = MyDataAdapter(Pager(listDataProvider))
 
 ```
 
@@ -146,6 +146,10 @@ data class MyData(@ItemIdRes(viewID = R.id.textView) val firstName: String,
                   @ItemIdRes(viewID = R.id.imageView, itemType = ItemType.IMAGE) val imageResource: Int)
 ```
 
+
+AutoDroid will generate the Adapter for you (In this case MyDataAdapter). Simply set this as the adapter of your recycler view. 
+
+See [example](https://github.com/josesamuel/autodroid/blob/master/sampleapp/src/main/java/com/josesamuel/sampleapp/ActivityUsingAutoDroidRecyclerView.kt)
 
 That's it! 
 
