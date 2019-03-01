@@ -16,7 +16,10 @@ internal class AdapterBuilder(element: Element, bindingManager: BindingManager) 
      */
     fun build(): FileSpec {
         val classSpecBuilder = TypeSpec.classBuilder(adapterClassName)
+                .addKdoc("Adapter that shows the data of  [%T]\n\n" +
+                        "@param data Pager with the data\n", ClassName.bestGuess(className))
                 .primaryConstructor(FunSpec.constructorBuilder()
+                        .addKdoc("Create an adapter with the given [Pager] that can be updated")
                         .addParameter("val data", ParameterizedTypeName.get(ClassName("pager", "Pager"), ClassName.bestGuess(className)))
                         .build())
                 //Extends the RecyclerView.Adapter
@@ -35,13 +38,26 @@ internal class AdapterBuilder(element: Element, bindingManager: BindingManager) 
                 //Handler
                 .addProperty(PropertySpec.builder("handler", ClassName("android.os", "Handler"), KModifier.PRIVATE).initializer("Handler(%T.getMainLooper())", ClassName("android.os", "Looper")).build())
 
+                //ViewHolderCreated listener
+                .addProperty(PropertySpec.builder("viewHolderCreatedListener", TypeVariableName("${className}ViewHolderCreatedListener").asNullable(), KModifier.PUBLIC).mutable(true).initializer("null").build())
+
+                //ViewHolderBound listener
+                .addProperty(PropertySpec.builder("viewHolderBindListener", TypeVariableName("${className}ViewHolderBindListener").asNullable(), KModifier.PUBLIC).mutable(true).initializer("null").build())
+
+                //secondary constructor
+                .addFunction(FunSpec.constructorBuilder()
+                        .addParameter("data", ParameterizedTypeName.get(List::class.asTypeName(), ClassName.bestGuess(className)))
+                        .callThisConstructor(CodeBlock.of("Pager(%T(data))", ClassName("pager", "ListDataProvider")))
+                        .addKdoc("Create an adapter with the given list of data\n")
+                        .build())
 
                 //Override the methods
 
                 .addFunction(FunSpec.builder("onCreateViewHolder").addModifiers(KModifier.OVERRIDE)
                         .addParameter("parent", ClassName("android.view", "ViewGroup"))
                         .addParameter("viewType", Int::class.java)
-                        .addStatement("return %T(%T.from(parent.context).inflate(" + element.getAnnotation(ItemLayoutRes::class.java).layoutID + ", parent, false), { viewId, position -> onClickListener?.invoke(viewId, position) } )",
+                        .addStatement("return %T(%T.from(parent.context).inflate(" + element.getAnnotation(ItemLayoutRes::class.java).layoutID + ", parent, false), { viewId, position -> onClickListener?.invoke(viewId, position) } ).also {" +
+                                " viewHolderCreatedListener?.invoke(it) }",
                                 ClassName(packageName, viewHolderClassName),
                                 ClassName("android.view", "LayoutInflater"))
                         .build())
@@ -69,7 +85,8 @@ internal class AdapterBuilder(element: Element, bindingManager: BindingManager) 
                 .addFunction(FunSpec.builder("onBindViewHolder").addModifiers(KModifier.OVERRIDE)
                         .addParameter("holder", ClassName(packageName, viewHolderClassName))
                         .addParameter("position", Int::class.java)
-                        .addStatement("return bind(holder, data[position])")
+                        .addStatement("return bind(holder, data[position]).also {" +
+                                " viewHolderBindListener?.invoke(holder, data[position]) }")
                         .build())
 
 

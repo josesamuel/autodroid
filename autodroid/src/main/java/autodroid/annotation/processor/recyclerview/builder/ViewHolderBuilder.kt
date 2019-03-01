@@ -37,6 +37,8 @@ internal class ViewHolderBuilder(element: Element, bindingManager: BindingManage
             initBuilder.addStatement("$fieldName.setOnClickListener(View.OnClickListener { onClickListener?.invoke($fieldName.id, adapterPosition) })")
         }
 
+        initBuilder.addStatement("mainView.setOnClickListener(View.OnClickListener { onClickListener?.invoke(mainView.id, adapterPosition) })")
+
         classSpecBuilder.addInitializerBlock(initBuilder.build())
 
         val fileSpecBuilder = FileSpec.builder(packageName, viewHolderClassName)

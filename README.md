@@ -162,8 +162,8 @@ Gradle dependency
 
 ```groovy
 dependencies {
-    implementation 'com.josesamuel:autodroid-api:1.0.0'
-    kapt 'com.josesamuel: autodroid:1.0.0'
+    implementation 'com.josesamuel:autodroid-api:1.0.1'
+    kapt 'com.josesamuel: autodroid:1.0.1'
     implementation 'com.josesamuel:pager:1.0.4'
     
     //Add Picaso if the any data binding uses Image type

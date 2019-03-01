@@ -1,13 +1,13 @@
 
 
 buildscript {
-    ext.kotlin_version = '1.2.41'
+    ext.kotlin_version = '1.2.71'
     ext.versions = [
             'minSdk'    : 9,
             'compileSdk': 26,
             'buildTools': '26.0.2',
             'release'   : '${VERSION_NAME}',
-            'androidPlugin': '3.0.0',
+            'androidPlugin': '3.2.1',
             'supportLibrary': '26.0.1'
     ]
 

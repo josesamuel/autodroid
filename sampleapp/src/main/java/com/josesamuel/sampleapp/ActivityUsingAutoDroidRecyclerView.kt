@@ -4,11 +4,13 @@ import android.app.Activity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import autodroid.annotations.recyclerview.AutoRecyclerViewAdapter
 import kotlinx.coroutines.experimental.launch
 import pager.ListDataProvider
 import pager.Pager
 import java.util.*
+import kotlin.math.log
 
 
 /**
@@ -34,13 +36,26 @@ class ActivityUsingAutoDroidRecyclerView : Activity() {
                 setOnClickListener { viewId, position ->
                     launch {
                         when (viewId) {
-                            R.id.button1 -> listDataProvider.add(random.nextInt(listDataProvider.size), MyData(random.nextInt(100).toString(), random.nextInt(100).toString(), drawables[random.nextInt(drawables.size)]))
+                            R.id.button1 -> {
+                                listDataProvider.add(random.nextInt(listDataProvider.size), MyData(random.nextInt(100).toString(), random.nextInt(100).toString(), drawables[random.nextInt(drawables.size)]))
+                            }
                             R.id.button2 -> listDataProvider.removeAt(random.nextInt(listDataProvider.size))
                         }
                     }
                 }
+                viewHolderCreatedListener = ::onViewHolderCreated
+                viewHolderBindListener = ::onViewHolderBound
             }
         }
     }
+
+    private fun onViewHolderCreated(viewHolder: MyDataViewHolder) {
+        Log.v("Test", "View Holder created $viewHolder")
+    }
+
+    private fun onViewHolderBound(viewHolder: MyDataViewHolder, data: MyData) {
+        Log.v("Test", "View Holder bound $viewHolder $data")
+    }
+
 }
 

@@ -2,10 +2,7 @@ package autodroid.annotation.processor.recyclerview.builder
 
 import autodroid.annotations.recyclerview.ItemIdRes
 import autodroid.annotations.recyclerview.ItemType
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.asTypeName
+import com.squareup.kotlinpoet.*
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.Modifier
@@ -43,8 +40,25 @@ internal class ViewMappingBuilder(element: Element, bindingManager: BindingManag
 
         }
 
+        val viewHolderCreatedLambda = LambdaTypeName.get(parameters = *arrayOf(ClassName(packageName, viewHolderClassName)),
+                returnType = Unit::class.asClassName())
+
+        val viewHolderBindLambda = LambdaTypeName.get(parameters = *arrayOf(ClassName(packageName, viewHolderClassName),
+                element.asType().asTypeName()),
+                returnType = Unit::class.asClassName())
+
         val fileSpecBuilder = FileSpec.builder(packageName, builderClassName)
                 .addFunction(methodSpecBuilder.build())
+                .addTypeAlias(TypeAliasSpec.builder("${viewHolderClassName}CreatedListener", viewHolderCreatedLambda)
+                        .addKdoc("Gets call back when a view holder is created.\nOverride if needed to do any customization\n")
+                        .build())
+                .addTypeAlias(TypeAliasSpec.builder("${viewHolderClassName}BindListener", viewHolderBindLambda)
+                        .addKdoc("Gets call back when a view holder is bound. \n" +
+                                 "Override if needed to do any customization\n")
+                        .build())
+
+
+
 
         return fileSpecBuilder.build()
     }
